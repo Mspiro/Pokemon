@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // app/learn-more/page.tsx
 export default function LearnMorePage() {
   return (
@@ -42,9 +44,9 @@ export default function LearnMorePage() {
         </Section>
 
         <div className="text-center">
-          <a href="/pokemon-list" className="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+          <Link href="/pokemon-list" className="text-blue-500 underline">
             Browse Pokemon
-          </a>
+          </Link>
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import PokemonCard from '@/components/PokemonCard';
 import { useInView } from 'react-intersection-observer';
 import { Ring } from '@uiball/loaders';
@@ -13,17 +13,18 @@ type Pokemon = {
   weight: number;
 };
 
-export default function PokemonListPage() {
+
+export default function PokemonDetailPage() {
+
   const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { ref, inView } = useInView();
 
-  const fetchMorePokemon = async () => {
+  const fetchMorePokemon = useCallback(async () => {
     setIsLoading(true);
     const newPokemon = await getAllPokemonWithPagination(offset, 20);
 
-    // 🔥 De-duplicate based on name
     setPokemonList(prev => {
       const existingNames = new Set(prev.map(p => p.name));
       const filtered = newPokemon.filter(p => !existingNames.has(p.name));
@@ -32,17 +33,19 @@ export default function PokemonListPage() {
 
     setOffset(prev => prev + 20);
     setIsLoading(false);
-  };
+  }, [offset]);
+
 
   useEffect(() => {
-    fetchMorePokemon(); // Initial load
-  }, []);
+    fetchMorePokemon();
+  }, [fetchMorePokemon]);
+
 
   useEffect(() => {
     if (inView && !isLoading) {
       fetchMorePokemon(); // Load more when sentinel comes into view
     }
-  }, [inView]);
+  }, [inView, fetchMorePokemon, isLoading]);
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">

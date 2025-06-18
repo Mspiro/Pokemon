@@ -1,24 +1,26 @@
 import { Metadata } from "next";
 import { getPokemonDetails } from "../../lib/pokemon";
-import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
 import PokemonImage from "./PokemonImage";
 
-type Props = {
-  params: { pokemon: string };
+type PageProps = {
+  params: {
+    slug: string;
+  };
 };
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
   return {
     title: `Pokemon | ${params.slug}`,
   };
 }
-
-export default async function PokemonPage({ params }: { params: { slug: string } }) {
+export default async function PokemonPage({ params }: PageProps) {
   const pokemon = await getPokemonDetails(params.slug);
   const imageToShow = pokemon.sprites.other["official-artwork"].front_default;
+
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
