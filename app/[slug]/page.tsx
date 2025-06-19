@@ -4,23 +4,23 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import PokemonImage from "./PokemonImage";
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
-
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
+  const { slug } = await params;
   return {
-    title: `Pokemon | ${params.slug}`,
+    title: `Pokemon | ${slug}`,
   };
 }
-export default async function PokemonPage({ params }: PageProps) {
-  const pokemon = await getPokemonDetails(params.slug);
-  const imageToShow = pokemon.sprites.other["official-artwork"].front_default;
 
+export default async function PokemonPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const pokemon = await getPokemonDetails(slug);
+  const imageToShow = pokemon.sprites.other["official-artwork"].front_default;
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
